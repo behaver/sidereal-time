@@ -5,6 +5,8 @@ const { JDateRepository, JDate } = require('@behaver/jdate');
 const Angle = require('@behaver/angle');
 const SiderealTime = require('../index');
 
+const angle = new Angle;
+
 describe('#SiderealTime', () => {
   describe('#constructor', () => {
     it('The param obTime should be a JDateRepository', () => {
@@ -148,6 +150,15 @@ describe('#SiderealTime', () => {
         s: 46.1351,
       }, 'hac'));
       expect(st.trueVal).to.closeTo(a.getSeconds(), 0.1);
-    })
+    });
+    it('Verify 天文算法 例12.b', () => {
+      let a = angle.parseHACString('8h 34m 56.853s').getDegrees();
+      let b = angle.parseDACString('77°03′56″').getDegrees();
+      let obTime = new JDateRepository(new Date('1987/04/11 03:21:00'), 'date');
+
+      let st = new SiderealTime(obTime, b);
+
+      expect(angle.setSeconds(st.trueVal).getDegrees()).to.closeTo(a - b, 0.00002);
+    });
   });
 });

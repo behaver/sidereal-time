@@ -5,6 +5,8 @@ const { PrecessionIAU2006, PrecessionIAU2000, PrecessionIAU1976 } = require('@be
 const { NutationIAU2000B, NutationLP } = require('@behaver/nutation');
 const Angle = require('@behaver/angle');
 
+const angle = new Angle;
+
 /**
  * SiderealTime
  *
@@ -20,6 +22,7 @@ class SiderealTime {
    * 
    * @param  {JDateRepository} obTime                  观测时间
    * @param  {Number}          obGLon                  观测经度
+   *                                                   单位：度
    * @param  {String}          options.precessionModel 岁差计算模型
    *                                                   包含：iau2006、iau2000、iau1976
    * @param  {String}          options.nutationModel   章动计算模型
@@ -81,8 +84,8 @@ class SiderealTime {
    */
   get ERA() {
     if (!this.cache.has('ERA')) {
-      let obl = (new Angle(this.obGLon, 'd')).getSeconds();
-      this.cache.ERA = obl + (new Angle(2 * Math.PI * (0.7790572732640 + 1.00273781191135448 * (this.obTime.JD - 2451545.0)), 'r')).inRound().getSeconds();
+      let obl = angle.setDegrees(this.obGLon).getRadian();
+      this.cache.ERA = angle.setRadian(2 * Math.PI * (0.7790572732640 + 1.00273781191135448 * (this.obTime.JD - 2451545.0)) - obl).inRound().getSeconds();
     }
     
     return this.cache.ERA;
@@ -108,12 +111,12 @@ class SiderealTime {
    */
   get trueVal() {
     if (!this.cache.has('trueVal')) {
-      let e0 = (new Angle(this.precession.epsilon, 's')).getRadian();
-      let delta_e = (new Angle(this.nutation.obliquity, 'ms')).getRadian();
-      let delta_psi = (new Angle(this.nutation.longitude, 'ms')).getRadian();
+      let e0 = angle.setSeconds(this.precession.epsilon).getRadian();
+      let delta_e = angle.setMilliseconds(this.nutation.obliquity).getRadian();
+      let delta_psi = angle.setMilliseconds(this.nutation.longitude).getRadian();
 
       // 赤经章动：Δψ * cos(ε)，式中 Δψ 是黄经章动，ε 是真黄赤交角
-      let ra_nutation = (new Angle(delta_psi * Math.cos(e0 + delta_e), 'r')).getSeconds();
+      let ra_nutation = angle.setRadian(delta_psi * Math.cos(e0 + delta_e)).getSeconds();
 
       this.cache.trueVal = this.meanVal + ra_nutation;
     }
