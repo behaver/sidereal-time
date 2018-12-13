@@ -55,53 +55,6 @@ describe('#SiderealTime', () => {
         new SiderealTime(jdr, 0);
       }).not.to.throw();
     })
-
-    it('The param precessionModel should be a String.', () => {
-      expect(() => {
-        let jdr = new JDateRepository(2446896);
-        new SiderealTime(jdr, 120, { precessionModel: 11 });
-      }).to.throw();
-      expect(() => {
-        let jdr = new JDateRepository(2446896);
-        new SiderealTime(jdr, 120, { precessionModel: 'iau2006' });
-      }).not.to.throw();
-    });
-
-    it('The param precessionModel should be in ["IAU2006", "IAU2000", "IAU1976"].', () => {
-      expect(() => {
-        let jdr = new JDateRepository(2446896);
-        new SiderealTime(jdr, 120, { precessionModel: '11' });
-      }).to.throw();
-      expect(() => {
-        let jdr = new JDateRepository(2446896);
-        new SiderealTime(jdr, 120, { precessionModel: 'IAU2006' });
-        new SiderealTime(jdr, 120, { precessionModel: 'IAU2000' });
-        new SiderealTime(jdr, 120, { precessionModel: 'IAU1976' });
-      }).not.to.throw();
-    });
-
-    it('The param nutationModel should be a String.', () => {
-      expect(() => {
-        let jdr = new JDateRepository(2446896);
-        new SiderealTime(jdr, 120, { nutationModel: 11 });
-      }).to.throw();
-      expect(() => {
-        let jdr = new JDateRepository(2446896);
-        new SiderealTime(jdr, 120, { nutationModel: 'iau2000b' });
-      }).not.to.throw();
-    });
-
-    it('The param nutationModel should be in ["IAU2000B", "LP"].', () => {
-      expect(() => {
-        let jdr = new JDateRepository(2446896);
-        new SiderealTime(jdr, 120, { nutationModel: '11' });
-      }).to.throw();
-      expect(() => {
-        let jdr = new JDateRepository(2446896);
-        new SiderealTime(jdr, 120, { nutationModel: 'IAU2000B' });
-        new SiderealTime(jdr, 120, { nutationModel: 'lp' });
-      }).not.to.throw();
-    });
   });
 
   describe('get ERA()', () => {
@@ -116,23 +69,24 @@ describe('#SiderealTime', () => {
     });
     it('Verify the res of get meanVal().天文算法 例 11.a', () => {
       let jdr = new JDateRepository(new Date('1987/04/10 8:0:0'), 'date');
-      let st = new SiderealTime(jdr, 0, { precessionModel: 'iau2006' });
+      let st = new SiderealTime(jdr, 0);
       let a = (new Angle({
         h: 13,
         m: 10,
         s: 46.3668,
       }, 'hac'));
+
       expect(st.meanVal).to.closeTo(a.getSeconds(), 0.1);
     })
     it('Verify the res of get meanVal().天文算法 例 11.b', () => {
       let jdr = new JDateRepository(new Date('1987/04/11 3:21:0'), 'date');
-      let st = new SiderealTime(jdr, 0, { precessionModel: 'iau2006' });
+      let st = new SiderealTime(jdr, 0);
       let a = (new Angle({
         h: 8,
         m: 34,
         s: 57.0896,
       }, 'hac'));
-      // console.log((new Angle(st.meanVal, 's')).makeHACString())
+
       expect(st.meanVal).to.closeTo(a.getSeconds(), 0.1);
     })
   });
@@ -143,12 +97,13 @@ describe('#SiderealTime', () => {
     });
     it('Verify the res of get trueVal().天文算法 例 11.a', () => {
       let jdr = new JDateRepository(new Date('1987/04/10 8:0:0'), 'date');
-      let st = new SiderealTime(jdr, 0, { precessionModel: 'iau2006' });
+      let st = new SiderealTime(jdr, 0);
       let a = (new Angle({
         h: 13,
         m: 10,
         s: 46.1351,
       }, 'hac'));
+      
       expect(st.trueVal).to.closeTo(a.getSeconds(), 0.1);
     });
     it('Verify 天文算法 例12.b', () => {

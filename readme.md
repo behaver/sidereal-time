@@ -48,11 +48,12 @@ console.log(st.trueVal);
 
 ## API
 
-`constructor(obTime, obGLon = 0, options)` 构造函数
+`constructor(obTime, obGLon = 0)` 
+
+构造函数: 
+
 * 参数 obTime: 观测时间 JDateRepository 对象
 * 参数 obGLon: 观测经度, 缺省为 0 , 单位: 度
-* 参数 options.precessionModel: 岁差计算模型, 包括: iau2006, iau2000, iau1976
-* 参数 options.nutationModel: 章动计算模型, 包括: iau2000b, lp
 
 `get ERA()` 获取 地球自转角(ERA)，单位：角秒
 

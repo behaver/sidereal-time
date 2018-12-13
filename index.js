@@ -1,8 +1,8 @@
 'use strict';
 
 const { JDateRepository, CacheSpaceOnJDate } = require('@behaver/jdate');
-const { PrecessionIAU2006, PrecessionIAU2000, PrecessionIAU1976 } = require('@behaver/precession');
-const { NutationIAU2000B, NutationLP } = require('@behaver/nutation');
+const Precession = require('@behaver/precession');
+const Nutation = require('@behaver/nutation');
 const Angle = require('@behaver/angle');
 
 const angle = new Angle;
@@ -13,7 +13,7 @@ const angle = new Angle;
  * SiderealTime 是用于恒星时计算的组件
  *
  * @author 董 三碗 <qianxing@yeah.net>
- * @version 1.0.0
+ * @version 1.1.0
  */
 class SiderealTime {
 
@@ -21,58 +21,23 @@ class SiderealTime {
    * 构造函数
    * 
    * @param  {JDateRepository} obTime                  观测时间
-   * @param  {Number}          obGLon                  观测经度
-   *                                                   单位：度
-   * @param  {String}          options.precessionModel 岁差计算模型
-   *                                                   包含：iau2006、iau2000、iau1976
-   * @param  {String}          options.nutationModel   章动计算模型
-   *                                                   包含：iau2000b、lp
+   * @param  {Number}          obGLon                  观测经度, 单位：度
    */
-  constructor(obTime, obGLon = 0, {
-    precessionModel, 
-    nutationModel, 
-  } = { 
-    precessionModel: 'IAU2006', 
-    nutationModel: 'IAU2000B', 
-  }) {
-    if (precessionModel == undefined) precessionModel = 'IAU2006';
-    if (nutationModel == undefined) nutationModel = 'IAU2000B';
-
+  constructor(obTime, obGLon = 0) {
     if (!(obTime instanceof JDateRepository)) throw Error('The param obTime should be a instance of JDateRepository');
     if (typeof(obGLon) !== 'number') throw Error('The param obGLon should be a Number.');
     if (obGLon < -180 || obGLon > 180) throw Error('The param obGLon should be in [-180, 180]');
-    if (typeof(precessionModel) !== 'string') throw Error('The param precessionModel should be a String.');
-    if (typeof(nutationModel) !== 'string') throw Error('The param nutationModel should be a String.');
 
-    switch(precessionModel.toLowerCase()) {
-      case 'iau2006':
-        this.precession = new PrecessionIAU2006(obTime);
-        break;
-      case 'iau2000':
-        this.precession = new PrecessionIAU2000(obTime);
-        break;
-      case 'iau1976':
-        this.precession = new PrecessionIAU1976(obTime);
-        break;
-      default:
-        throw Error('The param precessionModel should be in ["IAU2006", "IAU2000", "IAU1976"]');
-    }
+    this.precession = new Precession({
+      epoch: obTime
+    });
 
-    switch(nutationModel.toLowerCase()) {
-      case 'iau2000b':
-        this.nutation = new NutationIAU2000B(obTime);
-        break;
-      case 'lp':
-        this.nutation = new NutationLP(obTime);
-        break;
-      default:
-        throw Error('The param nutationModel should be in ["IAU2000B", "LP"]');
-    }
+    this.nutation = new Nutation({
+      epoch: obTime
+    });
 
     this.obTime = obTime;
     this.obGLon = obGLon;
-    this.precessionModel = precessionModel;
-    this.nutationModel = nutationModel;
 
     this.cache = new CacheSpaceOnJDate(this.obTime);
   }
