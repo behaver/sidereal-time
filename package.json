@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@behaver/angle": "^2.0.2",
-    "@behaver/jdate": "^2.2.0",
+    "@behaver/jdate": "^2.3.0",
     "@behaver/nutation": "^2.0.0",
     "@behaver/precession": "^2.0.1"
   }
