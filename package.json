@@ -27,9 +27,10 @@
     "mocha": "^5.2.0"
   },
   "dependencies": {
-    "@behaver/angle": "^2.0.2",
-    "@behaver/jdate": "^2.3.0",
-    "@behaver/nutation": "^2.0.0",
-    "@behaver/precession": "^2.0.1"
-  }
+    "@behaver/angle": "^2.0.3",
+    "@behaver/jdate": "^2.3.2",
+    "@behaver/nutation": "^2.0.2",
+    "@behaver/precession": "^2.0.3"
+  },
+  "files": []
 }
